@@ -12,6 +12,7 @@ export class Frame {
         this.enemies = [];
 
         this.score = 0;
+        this.life = 3;
 
         this.initMouse();
     }
@@ -23,9 +24,16 @@ export class Frame {
     }
 
     loop = () => {
-        this.update();
-        this.draw();
-        requestAnimationFrame(this.loop);
+        if (this.life > 0) {
+            this.update();
+            this.draw();
+            requestAnimationFrame(this.loop);
+        } else {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.ctx.fillStyle = "#808080";
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            this.drawEnd();
+        }
     }
 
     update() {
@@ -40,6 +48,11 @@ export class Frame {
                     this.enemies.splice(eindex, 1);
                     this.score += 1;
                 }
+
+                if (e.y > this.player.y) {
+                    this.enemies.splice(eindex, 1);
+                    this.life -= 1;
+                }
             });
         });
     }
@@ -51,7 +64,8 @@ export class Frame {
         this.player.draw(this.ctx);
         this.bullets.forEach(b => b.draw(this.ctx));
         this.enemies.forEach(e => e.draw(this.ctx));
-        this.drawScore()
+        this.drawScore();
+        this.drawLife();
     }
 
     spawnEnemy() {
@@ -77,6 +91,18 @@ export class Frame {
     drawScore() {
         this.ctx.fillStyle = "white";
         this.ctx.font = "20px Arial";
+        this.ctx.fillText("Score: " + this.score, 10, 30);
+    }
+
+    drawLife() {
+        this.ctx.fillStyle = "white";
+        this.ctx.font = "20px Arial";
+        this.ctx.fillText("Life: " + this.life, 10, 60);
+    }
+
+    drawEnd() {
+        this.ctx.fillStyle = "white";
+        this.ctx.font = "30px Arial";
         this.ctx.fillText("Score: " + this.score, 10, 30);
     }
 }
