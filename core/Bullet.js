@@ -1,13 +1,17 @@
 import { GObject } from "./GObject.js";
 
 export class Bullet extends GObject {
-    constructor(x, y) {
+    constructor(x, y, vx, vy, radius) {
         super(x, y, 4, 15);
-        this.speed = 7;
+        // this.speed = speed;
+        this.vx = vx;
+        this.vy = vy;
+        this.radius = radius;
     }
 
     update() {
-        this.y -= this.speed;
+        this.x += this.vx;
+        this.y += this.vy;
     }
 
     draw(ctx) {
